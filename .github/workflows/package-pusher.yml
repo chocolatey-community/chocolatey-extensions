@@ -1,0 +1,59 @@
+name: Package Pusher
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: "What is the packages you wish to push (seperate package names with a whitespace)?"
+        required: true
+
+jobs:
+  pusher:
+    runs-on: windows-2019
+    env:
+      github_user_repo: ${{ github.repository }}
+      API_KEY: ${{ secrets.CHOCO_API_KEY }}
+      SOURCE_LOCATION: "https://push.chocolatey.org"
+
+    steps:
+      - name: Install Dependencies
+        run: |
+          # Placeholder for installing dependencies
+          # choco install chocolatey-core.extension -y
+        shell: powershell
+      - name: Environment Information
+        run: |
+          Get-CimInstance win32_operatingsystem -Property Caption, OSArchitecture, Version | fl Caption, OSArchitecture, Version
+          $PSVersionTable
+          choco --version
+        shell: powershell
+      - uses: actions/checkout@v3.0.0
+      - name: Pack Packages
+        env:
+          PACKAGE_PUSHES: ${{ github.event.inputs.packages }}
+        run: |
+          $packages = $env:PACKAGE_PUSHES -split ' '
+          Write-Host "Packing Packages:`n$packages"
+          
+          foreach ($package in $packages) {
+            Write-Host ("{0}`n{1}`n" -f ('-'*60), "PACKAGE: $package")
+            $package_dir = Get-ChildItem -Recurse | ? { $_.Name -eq "$package.nuspec" } | Select-Object -First 1 | % Directory
+
+            if (!$package_dir) { Write-Warning "Can't find package '$package'"; continue }
+            Push-Location $package_dir
+
+            if (Test-Path update.ps1 -ea 0) { ./update.ps1 }
+            choco pack
+            Pop-Location
+          }
+        shell: powershell
+      - name: Push Packages
+        run: | 
+          $packages = Get-ChildItem -Recurse "*.nupkg"
+
+          foreach ($package in $packages) {
+            Write-Host ("- Pushing {0}" -f $package)
+
+            choco push "$package" --source "${env:SOURCE_LOCATION}" --api-key "${env:API_KEY}"
+          }
+        shell: powershell
