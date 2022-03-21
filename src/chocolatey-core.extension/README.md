@@ -1,6 +1,15 @@
 # chocolatey-core.extension
 
-This is the Powershell module that extends Chocolatey with new functions.
+This is a extension package that provides helper functions installed as a Chocolatey extension.
+These functions may be used in Chocolatey install/uninstall scripts by declaring this package a dependency in your package's nuspec.
+This package provides helper functions that can be used to enhance what is already available out of the box with Chocolatey CLI.
+This includes both features that are being tested for Chocolatey CLI itself, and other helpers to make the maintenance of
+Chocolatey packages easier.
+
+Helpers that were available in this package, and were later added to Chocolatey CLI, will be moved to
+the package [chocolatey-compatibility.extension](https://community.chocolatey.org/packages/chocolatey-compatibility.extension).
+
+Backwards compatibility is not considered for helpers available in this package, see the Notes below.
 
 ## Installation
 
@@ -40,11 +49,10 @@ To get the list of functions, load the module directly and invoke the following 
 
 To get the help for the specific function use `man`:
 
-    man Get-UninstallRegistryKey
+    man Get-EffectiveProxy
 
 
 ## Notes
 
-- There is [a known bug](https://github.com/chocolatey-community/chocolatey-coreteampackages/issues/784) in the function `Get-AppInstallLocation` with parameter `$AppNamePattern` which is internally used both as wildcard and regex patterns. This usually doesn't create any problems, but may do so if application contains regex symbols in the name, such as [notepad++](https://github.com/chocolatey-community/chocolatey-coreteampackages/issues/1198).
-
-
+- There is [a known bug](https://github.com/chocolatey-community/chocolatey-extensions/issues/11) in the function `Get-AppInstallLocation` with parameter `$AppNamePattern` which is internally used both as wildcard and regex patterns. This usually doesn't create any problems, but may do so if application contains regex symbols in the name, such as [notepad++](https://github.com/chocolatey-community/chocolatey-coreteampackages/issues/1198).
+- This package itself are not concerted of keeping backwards compatibility, if compatibility is of concern take a dependency on [chocolatey-compatibility.extension](https://community.chocolatey.org/packages/chocolatey-compatibility.extension) instead

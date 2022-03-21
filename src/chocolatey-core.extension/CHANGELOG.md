@@ -1,9 +1,10 @@
 # CHANGELOG
 
-## 1.3.6
+## 1.4.0
 
 - Bugfix: Expand all aliases used in helper scripts ([#8](https://github.com/chocolatey-community/chocolatey-extensions/issues/8))
 - Add dependency of compatibility packages to prevent breaking changes ([#7](https://github.com/chocolatey-community/chocolatey-extensions/issues/7))
+- Remove `Get-PackageParameters` and `Get-UninstallRegistryKey` that are moved to [chocolatey-compatibility.extension](https://community.chocolatey.org/packages/chocolatey-compatibility.extension) package instead ([#6](https://github.com/chocolatey-community/chocolatey-extensions/issues/6))
 
 ## 1.3.5
 
