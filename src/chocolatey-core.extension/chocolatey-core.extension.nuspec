@@ -22,6 +22,9 @@ These functions may be used in Chocolatey install/uninstall scripts by declaring
     <docsUrl>https://github.com/chocolatey-community/chocolatey-extensions/blob/master/src/chocolatey-core.extension/README.md</docsUrl>
     <bugTrackerUrl>https://github.com/chocolatey-community/chocolatey-extensions/issues</bugTrackerUrl>
     <releaseNotes>https://github.com/chocolatey-community/chocolatey-extensions/blob/master/src/chocolatey-core.extension/CHANGELOG.md</releaseNotes>
+    <dependencies>
+      <dependency id="chocolatey-compatibility.extension" version="1.0.0" />
+    </dependencies>
     </metadata>
     <files>
     <file src="extensions\**" target="extensions" />
