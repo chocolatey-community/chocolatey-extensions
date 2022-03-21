@@ -1,4 +1,4 @@
-. "$PSScriptRoot\Get-UninstallRegistryKey.ps1"
+﻿. "$PSScriptRoot\Get-UninstallRegistryKey.ps1"
 <#
 .SYNOPSIS
     Get application install location
@@ -35,7 +35,7 @@ function Get-AppInstallLocation {
 
     function strip($path) { if ($path.EndsWith('\')) { return $path -replace '.$' } else { $path } }
 
-    function is_dir( $path ) { $path -and (gi $path -ea 0).PsIsContainer -eq $true }
+    function is_dir( $path ) { $path -and (Get-Item $path -ea 0).PsIsContainer -eq $true }
 
     $ErrorActionPreference = "SilentlyContinue"
 
@@ -58,18 +58,18 @@ function Get-AppInstallLocation {
     } else { Write-Verbose "Found $($key.Count) keys, aborting this method" }
 
     $dirs = $Env:ProgramFiles, "$Env:ProgramFiles\*\*"
-    if (Get-ProcessorBits 64) { $dirs += ${ENV:ProgramFiles(x86)}, "${ENV:ProgramFiles(x86)}\*\*" }
+    if (Get-OSArchitectureWidth 64) { $dirs += ${ENV:ProgramFiles(x86)}, "${ENV:ProgramFiles(x86)}\*\*" }
     Write-Verbose "Trying Program Files with 2 levels depth: $dirs"
-    $location = (ls $dirs | ? {$_.PsIsContainer}) -match $AppNamePattern | select -First 1 | % {$_.FullName}
+    $location = (Get-ChildItem $dirs | Where-Object {$_.PsIsContainer}) -match $AppNamePattern | Select-Object -First 1 | ForEach-Object {$_.FullName}
     if (is_dir $location) { return strip $location }
 
     Write-Verbose "Trying native commands on PATH"
-    $location = (Get-Command -CommandType Application) -match $AppNamePattern | select -First 1 | % { Split-Path $_.Source }
+    $location = (Get-Command -CommandType Application) -match $AppNamePattern | Select-Object -First 1 | ForEach-Object { Split-Path $_.Source }
     if (is_dir $location) { return strip $location }
 
     $appPaths =  "\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths"
     Write-Verbose "Trying Registry: $appPaths"
-    $location = (ls "HKCU:\$appPaths", "HKLM:\$appPaths") -match $AppNamePattern | select -First 1
+    $location = (Get-ChildItem "HKCU:\$appPaths", "HKLM:\$appPaths") -match $AppNamePattern | Select-Object -First 1
     if ($location) { $location = Split-Path $location }
     if (is_dir $location) { return strip $location }
 

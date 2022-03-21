@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Ensure that process is stopped in reliable way
 
@@ -71,7 +71,7 @@ function Remove-Process {
     # Process might spawn multiple children, typical for browsers; remove all children as parent will handle them
     if (!$WithChildren) {
         Write-Verbose "Remove all children processes"
-        $proc = $proc | ? { $proc.Id -notcontains $_.ParentId }
+        $proc = $proc | Where-Object { $proc.Id -notcontains $_.ParentId }
     }
 
     foreach ($p in $proc)  {
@@ -81,20 +81,20 @@ function Remove-Process {
             # wait for app to shut down for some time, max 5s
             for ($i=0; $i -lt 5; $i++) {
                 Start-Sleep 1
-                $p2 = ps -PID $p.id -ea 0
+                $p2 = Get-Process -PID $p.id -ea 0
                 if (!$p2) { break }
             }
         }
 
         # Return value of CloseMainWindow() 'True' is not reliable
         # so if process is still active kill it
-        $p2 = ps -PID $p.id -ea 0
+        $p2 = Get-Process -PID $p.id -ea 0
         if (($p.Process.Name -eq $p2.Name) -and ($p.Process.StartTime -eq $p2.StartTime)) {
             $p | Stop-Process -ea STOP
             Start-Sleep 1 # Running to fast here still gets the killed process in next line
         }
 
-        $p2 = ps -PID $p.id -ea 0
+        $p2 = Get-Process -PID $p.id -ea 0
         if (($p.Process.Name -eq $p2.Name) -and ($p.Process.StartTime -eq $p2.StartTime)) {
             Write-Warning "Process '$($p.Name)' run by user '$($p.Username)' can't be closed"
         }

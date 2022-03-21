@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Get the current proxy using several methods
 
@@ -40,16 +40,16 @@ function Get-EffectiveProxy(){
     }
     
     # Try chocolatey config file
-    [xml] $cfg = gc $env:ChocolateyInstall\config\chocolatey.config
-    $p = $cfg.chocolatey.config | % { $_.add } | ? { $_.key -eq 'proxy' } | select -Expand value
+    [xml] $cfg = Get-Content $env:ChocolateyInstall\config\chocolatey.config
+    $p = $cfg.chocolatey.config | ForEach-Object { $_.add } | Where-Object { $_.key -eq 'proxy' } | Select-Object -Expand value
     if ($p) {
         Write-Verbose "Using choco config proxy"
         return $p
     }
 
     # Try winhttp proxy
-    (netsh.exe winhttp show proxy) -match 'Proxy Server\(s\)' | set proxy 
-    $proxy = $proxy -split ' :' | select -Last 1
+    (netsh.exe winhttp show proxy) -match 'Proxy Server\(s\)' | Set-Variable proxy 
+    $proxy = $proxy -split ' :' | Select-Object -Last 1
     $proxy = $proxy.Trim()
     if ($proxy) {
         Write-Verbose "Using winhttp proxy server"

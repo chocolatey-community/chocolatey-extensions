@@ -34,7 +34,7 @@ function Get-AvailableDriveLetter {
   $i = @()
 
   #getting all the used Drive letters reported by the Operating System
-  $(Get-PSDrive -PSProvider filesystem) | %{$i += $_.name}
+  $(Get-PSDrive -PSProvider filesystem) | ForEach-Object{$i += $_.name}
 
   #Adding the excluded letter
   $i+=$ExcludedLetters

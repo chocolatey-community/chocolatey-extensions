@@ -81,13 +81,13 @@ function Get-UninstallRegistryKey {
 
         $keyPaths = $keys | Select-Object -ExpandProperty PSPath
         try {
-            [array]$foundKey = Get-ItemProperty -Path $keyPaths -ea 0 | ? { $_.DisplayName -like $SoftwareName }
+            [array]$foundKey = Get-ItemProperty -Path $keyPaths -ea 0 | Where-Object { $_.DisplayName -like $SoftwareName }
             $success = $true
         } catch {
             Write-Debug "Found bad key."
             foreach ($key in $keys){ try{ Get-ItemProperty $key.PsPath > $null } catch { $badKey = $key.PsPath }}
             Write-Verbose "Skipping bad key: $badKey"
-            [array]$keys = $keys | ? { $badKey -NotContains $_.PsPath }
+            [array]$keys = $keys | Where-Object { $badKey -NotContains $_.PsPath }
         }
 
         if ($success) { break; }
