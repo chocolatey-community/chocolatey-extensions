@@ -1,5 +1,4 @@
-﻿. "$PSScriptRoot\Get-UninstallRegistryKey.ps1"
-<#
+﻿<#
 .SYNOPSIS
     Get application install location
 
