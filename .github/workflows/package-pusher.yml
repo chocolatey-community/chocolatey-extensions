@@ -18,8 +18,8 @@ jobs:
     steps:
       - name: Install Dependencies
         run: |
-          # Placeholder for installing dependencies
-          # choco install chocolatey-core.extension -y
+          # Used to easily update metadata before pushing packages
+          choco install wormies-au-helpers -y --ignore-dependencies
         shell: powershell
       - name: Environment Information
         run: |
