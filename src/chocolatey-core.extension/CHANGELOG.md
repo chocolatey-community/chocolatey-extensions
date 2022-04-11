@@ -3,6 +3,7 @@
 ## 1.3.6
 
 - Bugfix: Expand all aliases used in helper scripts ([#8](https://github.com/chocolatey-community/chocolatey-extensions/issues/8))
+- Add dependency of compatibility packages to prevent breaking changes ([#7](https://github.com/chocolatey-community/chocolatey-extensions/issues/7))
 
 ## 1.3.5
 
