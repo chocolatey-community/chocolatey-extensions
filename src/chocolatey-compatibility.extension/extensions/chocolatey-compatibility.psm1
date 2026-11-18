@@ -7,7 +7,10 @@ $ScriptRoot = Split-Path $MyInvocation.MyCommand.Definition
 # we need to check the file system directly.
 $ChocolateyScriptPath = Resolve-Path "$env:ChocolateyInstall\helpers\functions"
 
-$existingMembers = Get-ChildItem $ChocolateyScriptPath | ForEach-Object { $_.BaseName }
+$existingMembers = @(
+    Get-ChildItem $ChocolateyScriptPath | ForEach-Object { $_.BaseName }
+    Get-Command -Module 'Chocolatey.PowerShell' -ErrorAction SilentlyContinue | ForEach-Object { $_.Name }
+) | Select-Object -Unique
 
 Get-ChildItem "$ScriptRoot\helpers\*.ps1" | `
   Where-Object { $_.Name -cmatch "^[A-Z]+" } | `
