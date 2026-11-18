@@ -3,6 +3,7 @@
 ## 1.1.0
 
 - Ensure commands provided as cmdlets and not functions are not overridden.
+- Add compatibility layer for removed function 'Install-ChocolateyPinnedTaskBarItem'
 
 ## 1.0.0
 

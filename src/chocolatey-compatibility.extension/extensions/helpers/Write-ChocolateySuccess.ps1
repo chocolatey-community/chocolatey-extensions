@@ -52,6 +52,6 @@ function Write-ChocolateySuccess {
     [object[]] $IgnoredArguments
   )
 
-  Write-Warning "Write-ChocolateySuccess was removed in Chocolatey CLI v1, and have no functionality any more. If you are the maintainer, please remove it from from your package file."
+  Write-Warning "Write-ChocolateySuccess was removed in Chocolatey CLI v1, and has no functionality any more. If you are the maintainer, please remove it from from your package file."
   Write-Warning "If you are not the maintainer, please contact the maintainer to update the $packageName package."
 }
